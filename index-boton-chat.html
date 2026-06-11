@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Chat HubSpot</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .chat-btn {
+            background: #00BDA5;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .chat-btn:hover {
+            opacity: .9;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Prueba de Chat HubSpot</h1>
+
+    <a href="?chatflow=si" class="chat-btn">
+        Chatear con soporte
+    </a>
+
+    <script>
+        function abrirChatHubSpot() {
+            if (
+                window.HubSpotConversations &&
+                window.HubSpotConversations.widget
+            ) {
+                window.HubSpotConversations.widget.open();
+            }
+        }
+
+        function esperarHubSpot() {
+            let intentos = 0;
+
+            const intervalo = setInterval(() => {
+                intentos++;
+
+                if (
+                    window.HubSpotConversations &&
+                    window.HubSpotConversations.widget
+                ) {
+                    clearInterval(intervalo);
+                    abrirChatHubSpot();
+                }
+
+                if (intentos > 20) {
+                    clearInterval(intervalo);
+                }
+            }, 500);
+        }
+
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("chatflow") === "si") {
+            esperarHubSpot();
+        }
+    </script>
+
+</body>
+</html>
