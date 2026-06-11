@@ -3,88 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba Chat HubSpot</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 50px;
-            text-align: center;
-        }
-
-        .chat-btn {
-            background: #00BDA5;
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .chat-btn:hover {
-            opacity: .9;
-        }
-    </style>
-
-
-
+    <title>Prueba Chatflow HubSpot</title>
 
 <!-- Start of HubSpot Embed Code -->
 <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/50744593.js"></script>
 <!-- End of HubSpot Embed Code -->
 
+    <style>
+        body{
+            margin:0;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-family:Arial,sans-serif;
+            background:#f5f7fa;
+        }
 
-
-
-
+        button{
+            background:#00BDA5;
+            color:white;
+            border:none;
+            border-radius:8px;
+            padding:14px 28px;
+            font-size:16px;
+            cursor:pointer;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Prueba de Chat HubSpot</h1>
+<button id="chat-soporte">
+    Chatear con soporte
+</button>
 
-    <a href="?chatflow=si" class="chat-btn">
-        Chatear con soporte
-    </a>
+<script>
+document.getElementById('chat-soporte').addEventListener('click', function() {
 
-    <script>
-        function abrirChatHubSpot() {
-            if (
-                window.HubSpotConversations &&
-                window.HubSpotConversations.widget
-            ) {
+    // Agrega ?chatflow=si sin recargar la página
+    const url = new URL(window.location);
+
+    url.searchParams.set('chatflow', 'si');
+
+    window.history.pushState({}, '', url);
+
+    // Intenta abrir el widget
+    let attempts = 0;
+
+    const timer = setInterval(function() {
+
+        attempts++;
+
+        if (
+            window.HubSpotConversations &&
+            window.HubSpotConversations.widget
+        ) {
+            clearInterval(timer);
+
+            setTimeout(function() {
                 window.HubSpotConversations.widget.open();
-            }
+            }, 1000);
         }
 
-        function esperarHubSpot() {
-            let intentos = 0;
-
-            const intervalo = setInterval(() => {
-                intentos++;
-
-                if (
-                    window.HubSpotConversations &&
-                    window.HubSpotConversations.widget
-                ) {
-                    clearInterval(intervalo);
-                    abrirChatHubSpot();
-                }
-
-                if (intentos > 20) {
-                    clearInterval(intervalo);
-                }
-            }, 500);
+        if (attempts >= 20) {
+            clearInterval(timer);
         }
 
-        const params = new URLSearchParams(window.location.search);
+    }, 500);
 
-        if (params.get("chatflow") === "si") {
-            esperarHubSpot();
-        }
-    </script>
+});
+</script>
 
 </body>
 </html>
